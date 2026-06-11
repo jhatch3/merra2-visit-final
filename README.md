@@ -4,11 +4,16 @@ Justin Hatch · SCI 410 Scientific Visualization: https://github.com/jhatch3/mer
 
 ## What it does
 
-Turns NASA MERRA-2 data into 3D temperature, moisture, and wind videos
-in VisIt. Region: western Atlantic, 16 time steps.
-The data's vertical axis is pressure, so I convert it to height
-(`z = 7.5 * ln(1000 / pressure)`). There are two ways to get data into VisIt: a Python formatter, and a
-C++ VisIt plugin that reads the raw `.nc4` directly. with these I made 17 videos total.
+A VisIt scientific-visualization project built on real NASA data. I use VisIt to
+render the 3D atmosphere — temperature, moisture, and wind — from MERRA-2 reanalysis
+over the western Atlantic (16 time steps). All the visuals are made through VisIt's
+Python scripting: pseudocolor plots, horizontal and vertical slices, an orbiting
+two-slice 3D view, a volume render, and a 4-panel particle view — 17 videos total.
+
+Getting the NASA data into VisIt is the other half. I do it two ways: a Python
+formatter that pre-converts the files, and a C++ VisIt plugin that reads the raw
+`.nc4` directly. Either way, the data's vertical axis (pressure) is converted to
+height (`z = 7.5 * ln(1000 / pressure)`) so VisIt renders a real 3D atmosphere.
 
 ## Files
 
