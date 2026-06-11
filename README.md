@@ -2,7 +2,7 @@
 
 Justin Hatch · SCI 410 Scientific Visualization
 
-**Full project (code + all videos): __REPO_URL__**
+**Full project (code + all videos): https://github.com/jhatch3/merra2-visit-final**
 
 ## What it does
 
