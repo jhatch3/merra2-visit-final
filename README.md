@@ -9,7 +9,7 @@ Turns NASA MERRA-2 reanalysis data into 3D temperature, moisture, and wind video
 in VisIt. Region: western Atlantic (10–45 N, 90–40 W), 5–6 Sep 2023, 16 time steps.
 The data's vertical axis is pressure, so I convert it to height
 (`z = 7.5 * ln(1000 / pressure)`). Two paths into VisIt: a Python formatter, and a
-C++ VisIt plugin that reads the raw `.nc4` directly. 15 videos total.
+C++ VisIt plugin that reads the raw `.nc4` directly. 17 videos total.
 
 ## Files
 
@@ -49,6 +49,8 @@ Plugin:
 | [![flow](thumbs/flow.png)](merra_flow_particles.mp4) | **[Particles following the wind](merra_flow_particles.mp4)** — 1,232 tracked particles |
 | [![quad](thumbs/quad.png)](merra_flow_quad.mp4) | **[Same particles, 4 views](merra_flow_quad.mp4)** |
 | [![volume](thumbs/vol.png)](merra_vol_qv.mp4) | **[Moisture volume render](merra_vol_qv.mp4)** |
+| [![wind arrows](thumbs/p1.png)](merra_p1_windvec.mp4) | **[3D wind vectors](merra_p1_windvec.mp4)** — wind arrows through the volume |
+| [![wind map](thumbs/p2.png)](merra_p2_windmap.mp4) | **[Near-surface wind map](merra_p2_windmap.mp4)** — circulation on a low slice |
 
 Formatter (pre) vs plugin (post) — same cross-sections both ways; plugin covers the whole globe, formatter the Atlantic slice:
 
