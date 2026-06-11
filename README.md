@@ -5,38 +5,38 @@ Justin Hatch · SCI 410 Scientific Visualization: https://github.com/jhatch3/mer
 ## What it does
 
 A VisIt scientific-visualization project built on real NASA data. I use VisIt to
-render the 3D atmosphere — temperature, moisture, and wind — from MERRA-2 reanalysis
-over the western Atlantic (16 time steps). All the visuals are made through VisIt's
-Python scripting: pseudocolor plots, horizontal and vertical slices, an orbiting
-two-slice 3D view, a volume render, and a 4-panel particle view — 17 videos total.
+render the 3D atmosphere (temperature, moisture, wind) from MERRA-2 reanalysis over
+the western Atlantic, 16 time steps. Every visual comes from VisIt's Python
+scripting: pseudocolor plots, horizontal and vertical slices, an orbiting two-slice
+3D view, a volume render, and a 4-panel particle view. 17 videos total.
 
-Getting the NASA data into VisIt is the other half. I do it two ways: a Python
+Getting the NASA data into VisIt is the other half, done two ways: a Python
 formatter that pre-converts the files, and a C++ VisIt plugin that reads the raw
-`.nc4` directly. Either way, the data's vertical axis (pressure) is converted to
-height (`z = 7.5 * ln(1000 / pressure)`) so VisIt renders a real 3D atmosphere.
+`.nc4` directly. Either way the pressure axis becomes height
+(`z = 7.5 * ln(1000 / pressure)`) so VisIt renders a true 3D atmosphere.
 
 ## Files
 
 Layout: `src/scripts/` (Python + VisIt scripts), `src/plugin/` (C++ plugin),
-`src/videos/` (rendered mp4s), `src/thumbnails/` (preview images). Run scripts
-from the repo root so their relative data paths (`./vtr`, `./frames_merra`) resolve.
+`src/videos/` (mp4s), `src/thumbnails/` (previews). Run scripts from the repo root
+so their relative data paths (`./vtr`, `./frames_merra`) resolve.
 
 Python pipeline (`src/scripts/`):
-- `download_merra2.py` — download raw MERRA-2 files (needs NASA Earthdata login)
-- `build_merra_series.py` — formatter: one variable, region-clipped, pressure→height, written as a VTK `.vtr` series + `.visit` index + `times.csv`
-- `build_wind_vectors.py` — 3D wind vector field from U, V, OMEGA
-- `advect_particles.py` — Lagrangian particle solver (this VisIt build has no streamline plot)
-- `_make_test_merra.py` — synthetic test file, same shape as a real MERRA-2 file
+- `download_merra2.py`: download raw MERRA-2 files (needs NASA Earthdata login)
+- `build_merra_series.py`: formatter, region-clips one variable, pressure→height, writes a VTK `.vtr` series + `.visit` index + `times.csv`
+- `build_wind_vectors.py`: 3D wind vector field from U, V, OMEGA
+- `advect_particles.py`: Lagrangian particle solver (this VisIt build has no streamline plot)
+- `_make_test_merra.py`: synthetic test file, same shape as a real MERRA-2 file
 
 VisIt scripts (`visit -cli -nowin -s <file>`):
-- `make_movies_merra.py` — 6 cross-section movies (m1–m6)
-- `make_flow_merra.py` — particle flow
-- `make_flow_quad_merra.py` — particle flow, 4 panels
-- `make_particles_merra.py` — wind vector glyphs
-- `make_volume_merra.py` — moisture volume render (windowed/GPU only)
+- `make_movies_merra.py`: 6 cross-section movies (m1-m6)
+- `make_flow_merra.py`: particle flow
+- `make_flow_quad_merra.py`: particle flow, 4 panels
+- `make_particles_merra.py`: wind vector glyphs
+- `make_volume_merra.py`: moisture volume render (windowed/GPU only)
 
 Plugin:
-- `src/plugin/` — C++ reader that opens raw `.nc4` and does pressure→height in `GetMesh`. Reads the full global grid (~8.7M points) vs the formatter's Atlantic slice (~144k).
+- `src/plugin/`: C++ reader that opens raw `.nc4` and does pressure→height in `GetMesh`. Reads the full global grid (~8.7M points) vs the formatter's Atlantic slice (~144k).
 
 ## How to run
 
@@ -50,19 +50,19 @@ From the repo root:
 ## Datasets
 
 - Real: MERRA-2 `M2I3NPASM`, from NASA GES DISC (Earthdata login).
-- Test: `_make_test_merra.py` — synthetic file to test the pipeline without the 1.2 GB download.
+- Test: `_make_test_merra.py`, a synthetic file to test the pipeline without the 1.2 GB download.
 
 ## Videos
 
 | Preview | Video |
 |---|---|
-| [![flow](src/thumbnails/flow.png)](src/videos/merra_flow_particles.mp4) | **[Particles following the wind](src/videos/merra_flow_particles.mp4)** — 1,232 tracked particles |
+| [![flow](src/thumbnails/flow.png)](src/videos/merra_flow_particles.mp4) | **[Particles following the wind](src/videos/merra_flow_particles.mp4)** (1,232 tracked particles) |
 | [![quad](src/thumbnails/quad.png)](src/videos/merra_flow_quad.mp4) | **[Same particles, 4 views](src/videos/merra_flow_quad.mp4)** |
 | [![volume](src/thumbnails/vol.png)](src/videos/merra_vol_qv.mp4) | **[Moisture volume render](src/videos/merra_vol_qv.mp4)** |
-| [![wind arrows](src/thumbnails/p1.png)](src/videos/merra_p1_windvec.mp4) | **[3D wind vectors](src/videos/merra_p1_windvec.mp4)** — wind arrows through the volume |
-| [![wind map](src/thumbnails/p2.png)](src/videos/merra_p2_windmap.mp4) | **[Near-surface wind map](src/videos/merra_p2_windmap.mp4)** — circulation on a low slice |
+| [![wind arrows](src/thumbnails/p1.png)](src/videos/merra_p1_windvec.mp4) | **[3D wind vectors](src/videos/merra_p1_windvec.mp4)** (arrows through the volume) |
+| [![wind map](src/thumbnails/p2.png)](src/videos/merra_p2_windmap.mp4) | **[Near-surface wind map](src/videos/merra_p2_windmap.mp4)** (circulation on a low slice) |
 
-Formatter (pre) vs plugin (post) — same cross-sections both ways; plugin covers the whole globe, formatter the Atlantic slice:
+Formatter (pre) vs plugin (post), same cross-sections both ways; plugin covers the whole globe, formatter the Atlantic slice:
 
 | | Pre (formatter) | Post (plugin) |
 |---|---|---|
