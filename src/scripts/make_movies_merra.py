@@ -80,6 +80,7 @@ def save_atts(prefix):
     s.format = s.PNG
     s.width = 1280
     s.height = 720
+    s.resConstraint = s.NoConstraint   # honor 1280x720 (default forces a square)
     s.family = 1
     SetSaveWindowAttributes(s)
 
@@ -154,8 +155,8 @@ def _sweep(lo, hi, frac, phase, cycles=2.0, inset=0.06):
     """Ping-pong a slice plane between lo..hi as frac goes 0->1.
 
     inset keeps the plane off the exact faces so it never falls outside the
-    volume and vanish; phase offsets each axis so the three planes glide
-    independently (like three sliders being dragged at once).
+    volume and vanish; phase offsets each axis so the planes glide
+    independently (like sliders being dragged at once).
     """
     span = hi - lo
     lo += span * inset
@@ -167,33 +168,41 @@ def _sweep(lo, hi, frac, phase, cycles=2.0, inset=0.06):
 
 def m3_wind_orbit():
     db = vpath("T"); OpenDatabase(db)
-    AddPlot("Pseudocolor", "T")
-    pc = PseudocolorAttributes()
-    pc.colorTableName = "hot_desaturated"
-    pc.lightingFlag = 0                      # flat colors so edge-on slices don't go black
-    SetPlotOptions(pc)
-    AddOperator("ThreeSlice")               # 3 orthogonal planes -> always full, clearly 3D
-    ts = ThreeSliceAttributes()
-    ts.x = -65.0; ts.y = 27.0; ts.z = 4.0
-    SetOperatorOptions(ts)
+    # two VERTICAL slice planes (no horizontal/altitude plane): one at constant
+    # longitude (X) and one at constant latitude (Y). Each is its own plot+Slice,
+    # since one plot can't carry two independent planes.
+    for k in range(2):
+        AddPlot("Pseudocolor", "T")
+        pc = PseudocolorAttributes()
+        pc.colorTableName = "hot_desaturated"
+        pc.lightingFlag = 0                  # flat colors so edge-on slices don't go black
+        pc.legendFlag = 1 if k == 0 else 0   # single shared legend
+        SetPlotOptions(pc)
+        AddOperator("Slice")
     DrawPlots(); SetTimeSliderState(0); ResetView()
-    # real spatial extents -> sweep the planes across the actual volume
-    xmin, xmax, ymin, ymax, zmin, zmax = GetSpatialExtents("original")
-    banner("3D Temperature - Orthogonal Slices",
-           "Three planes glide through the volume  |  slow orbit while time advances  |  5-6 Sep 2023")
+    banner("3D Temperature - Vertical Slices",
+           "Two vertical planes glide through the volume  |  slow orbit while time advances  |  5-6 Sep 2023")
     save_atts("m3_orbit_")
+
+    def vslice(axis, pct):                   # set the active plot's slice plane
+        sl = SliceAttributes()
+        sl.originType = sl.Percent
+        sl.originPercent = pct
+        sl.axisType = axis
+        sl.project2d = 0
+        SetOperatorOptions(sl)
+
     N = 160                                  # many frames -> slow orbit
     ns = TimeSliderGetNStates()
+    sa = SliceAttributes()                   # for the axis enums
     for i in range(N):
         frac = i / float(N)
         state = min(ns - 1, int(frac * ns))  # sweep through all 16 timesteps
         SetTimeSliderState(state)
         clock(state)
-        # slide the three slice planes (the "x/y/z sliders"), each on its own phase
-        ts.x = _sweep(xmin, xmax, frac, phase=0.00)
-        ts.y = _sweep(ymin, ymax, frac, phase=0.33)
-        ts.z = _sweep(zmin, zmax, frac, phase=0.66)
-        SetOperatorOptions(ts)
+        # slide the two vertical planes (the "x/y sliders"), each on its own phase
+        SetActivePlots(0); vslice(sa.XAxis, _sweep(0.0, 100.0, frac, phase=0.00))
+        SetActivePlots(1); vslice(sa.YAxis, _sweep(0.0, 100.0, frac, phase=0.50))
         rad = 2 * math.pi * frac             # one slow revolution over the run
         set_view((0.6 * math.cos(rad), 0.6 * math.sin(rad), 0.45))
         SaveWindow()

@@ -21,3 +21,7 @@ movie3_slice.mp4
 
 # duplicate staging copy
 Hatch_VisIt_MERRA2_Final/
+
+# VisIt render logs
+visit_out.log
+visit_err.log
