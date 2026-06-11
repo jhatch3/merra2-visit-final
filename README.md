@@ -69,7 +69,3 @@ Formatter (pre) vs plugin (post) — same cross-sections both ways; plugin cover
 - Text annotations are global, not per-window, so the 4-panel labels stacked; added them with ffmpeg.
 - Everything rendered sideways until I set the camera up-vector to the height axis.
 - Misc: `ocean` color table doesn't exist; it's `colorByMagnitude` not `colorByMag`; `.visit` needs absolute paths; `SaveWindow` appends, so clear frames first.
-
-## Time spent
-
-~36 hours: ~22 in VisIt (incl. the plugin), ~14 in Python/data.
