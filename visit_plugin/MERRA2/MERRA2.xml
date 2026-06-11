@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Plugin name="MERRA2"
+        type="database"
+        label="MERRA2 (NASA atmosphere)"
+        version="1.0"
+        hasoptions="false"
+        haswriter="false"
+        enabled="true"
+        dbtype="MTSD">
+  <!--
+    MTSD = Multiple Timestep, Single Domain.
+    One MERRA-2 inst3_3d_asm_Np .nc4 file holds 8 timesteps on a single,
+    undecomposed grid, which is exactly MTSD. List several files in a .visit
+    file to view multiple days as one series.
+
+    xml2cmake compiles avt<Name>FileFormat.C automatically, so the reader does
+    not need to be listed here. The plugin does need the NetCDF C library,
+    declared below (point these at your NetCDF install when you build).
+  -->
+  <CXXFLAGS>
+    ${NETCDF_INCLUDE_DIR}
+  </CXXFLAGS>
+  <LIBS>
+    ${NETCDF_LIBRARY}
+  </LIBS>
+</Plugin>

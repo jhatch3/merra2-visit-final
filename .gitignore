@@ -1,0 +1,29 @@
+# raw / downloaded / regenerable data (too big for the repo)
+merra/
+vti/
+vtr/
+vtp/
+frames/
+frames_merra/
+frames_plugin/
+
+# files from a different project (LANL asteroid dataset)
+download_asteroid.py
+build_visit_series.py
+make_movies.py
+movie1_time.mp4
+movie2_orbit.mp4
+movie3_slice.mp4
+
+# videos cut from the final submission
+merra_p1_windvec.mp4
+merra_p2_windmap.mp4
+thumbs/p1.png
+thumbs/p2.png
+
+# submission archives / build artifacts
+*.zip
+*.tar.gz
+
+# duplicate staging copy
+Hatch_VisIt_MERRA2_Final/
